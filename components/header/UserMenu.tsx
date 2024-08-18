@@ -38,8 +38,6 @@ const UserMenu = async () => {
             >
               Logout
             </ButtonAction>
-
-            <CartLink />
           </>
         ) : (
           <>
@@ -51,6 +49,8 @@ const UserMenu = async () => {
             </Button>
           </>
         )}
+
+        <CartLink />
       </div>
     </div>
   );

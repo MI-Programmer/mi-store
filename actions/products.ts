@@ -83,8 +83,8 @@ export const createProduct = async (
     .upload(imageName, imageFile);
   if (error) throw new Error("Failed to upload image. Please try again.");
 
-  revalidatePath("/account/products");
-  redirect("/account/products");
+  revalidatePath("/admin/products");
+  redirect("/admin/products");
 };
 
 export const updateProduct = async (
@@ -142,8 +142,8 @@ export const updateProduct = async (
     }
   }
 
-  revalidatePath("/account/products");
-  redirect("/account/products");
+  revalidatePath("/admin/products");
+  redirect("/admin/products");
 };
 
 export const deleteProduct = async (deletedProductId: string) => {
@@ -172,5 +172,5 @@ export const deleteProduct = async (deletedProductId: string) => {
     if (error) throw new Error(error.message);
   }
 
-  revalidatePath("/account/products");
+  revalidatePath("/admin/products");
 };

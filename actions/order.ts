@@ -223,6 +223,7 @@ export const updateOrderStatus = async ({ id, status }: OrderStatusType) => {
     });
 
     revalidatePath(`/account/orders/${order.id}`);
+    revalidatePath(`/admin/orders/${order.id}`);
   } catch (error: any) {
     throw new Error(error.message);
   }

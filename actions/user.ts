@@ -106,7 +106,7 @@ export const updateUserImage = async (formData: FormData) => {
     if (error) throw new Error(errorDelete?.message);
   }
 
-  revalidatePath("/profile/settings");
+  revalidatePath("/account/settings");
 };
 
 export const updateUserRole = async (formData: FormData) => {
@@ -124,5 +124,5 @@ export const updateUserRole = async (formData: FormData) => {
     throw new Error("Failed to update user role. Please try again.");
   }
 
-  revalidatePath("/account/user");
+  revalidatePath("/admin/user");
 };
