@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .label {
+    @apply block text-sm font-medium leading-6 text-gray-900;
+  }
+
+  .input {
+    @apply block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 disabled:bg-gray-200 sm:text-sm sm:leading-6;
+  }
+
+  .inputFile {
+    @apply w-full cursor-pointer rounded-md border border-gray-300 text-sm file:mr-3 file:cursor-pointer file:rounded-sm file:border-none file:bg-indigo-600 file:px-3 file:py-2 file:font-medium file:text-indigo-50 file:transition-colors file:duration-200 hover:file:bg-indigo-700 disabled:bg-gray-200;
+  }
+
+  .inputSelect {
+    @apply block cursor-pointer rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-indigo-600 focus:ring-indigo-600;
+  }
+
+  .spinner {
+    margin: 3.2rem auto 1.6rem;
+    width: 60px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 8px solid theme("colors.indigo.600");
+    border-right-color: theme("colors.gray.200");
+    animation: rotate 1s infinite linear;
+  }
+
+  .spinner-mini {
+    margin: 0;
+    width: 20px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 2px solid theme("colors.gray.200");
+    border-right-color: transparent;
+    animation: rotate 1s infinite linear;
+  }
+
+  @keyframes rotate {
+    to {
+      transform: rotate(1turn);
+    }
+  }
+}
