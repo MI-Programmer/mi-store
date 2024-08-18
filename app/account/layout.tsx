@@ -1,4 +1,4 @@
-import { LayoutProps } from "@/.next/types/app/layout";
+import { ReactNode } from "react";
 import {
   CogIcon,
   ShoppingBagIcon,
@@ -25,7 +25,7 @@ const tabs = [
   },
 ];
 
-const Layout = ({ children }: LayoutProps) => {
+const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <>
       <TabsAccount tabs={tabs} />

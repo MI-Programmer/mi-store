@@ -1,5 +1,5 @@
+import { ReactNode } from "react";
 import { redirect } from "next/navigation";
-import { LayoutProps } from "@/.next/types/app/layout";
 import {
   ClipboardDocumentCheckIcon,
   CubeIcon,
@@ -28,7 +28,7 @@ const tabs = [
   },
 ];
 
-const Layout = async ({ children }: LayoutProps) => {
+const Layout = async ({ children }: { children: ReactNode }) => {
   const user = await getUser(["role"]);
   if (user?.role !== "ADMIN") return redirect("/");
 

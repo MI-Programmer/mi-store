@@ -1,7 +1,7 @@
+import { ReactNode } from "react";
 import { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
-import { LayoutProps } from "@/.next/types/app/layout";
 
 import "@/styles/globals.css";
 import Header from "@/components/header/Header";
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   description: "MI Store",
 };
 
-const RootLayout = ({ children }: LayoutProps) => {
+const RootLayout = ({ children }: { children: ReactNode }) => {
   return (
     <html lang="en">
       <body className={inter.className}>
