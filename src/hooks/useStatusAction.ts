@@ -14,7 +14,11 @@ const useStatusAction = <T>(
     const serverAction = action(data);
     const actionPromise = new Promise((resolve, reject) =>
       serverAction
-        .then(() => resolve(""))
+        .then((data) => {
+          if (data.status === "error") reject(data.message);
+
+          resolve("");
+        })
         .catch(({ message }: any) => reject(message)),
     );
     startTransition(() => serverAction.catch(() => console.log("Error")));

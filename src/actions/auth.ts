@@ -1,60 +1,56 @@
 "use server";
 
-import { ZodError } from "zod";
 import { redirect } from "next/navigation";
-import { compareSync, hashSync } from "bcrypt-ts";
+import { compare, hashSync } from "bcrypt-ts";
 
-import { getUserByEmail, getUser } from "@/actions/user";
+import { getUserByEmail } from "@/actions/user";
 import { prisma } from "@/lib/db";
 import { signIn, signOut } from "@/lib/auth";
 import { credentialsSchema } from "@/lib/zod";
+import { catchAsync } from "@/utils/catchAsync";
 
 interface CredsProps {
   email: string;
   password: string;
 }
 
-export const registerCreds = async ({ email, password }: CredsProps) => {
-  try {
-    await credentialsSchema.parseAsync({ email, password });
-  } catch (error) {
-    if (error instanceof ZodError) {
-      return null;
+export const registerCreds = catchAsync(
+  async ({ email, password }: CredsProps) => {
+    try {
+      await credentialsSchema.parseAsync({ email, password });
+    } catch (errorZod) {
+      throw new Error("Validation failed.");
     }
-  }
 
-  const existingUser = await getUserByEmail(email);
-  if (existingUser)
-    throw new Error(
-      `Email "${email}" is already registered. Please use a different email.`,
-    );
+    const existingUser = await getUserByEmail(email);
+    if (existingUser) {
+      throw new Error(
+        `Email "${email}" is already registered. Please use a different email.`,
+      );
+    }
 
-  try {
     const hashedPassword = hashSync(password, 12);
     await prisma.user.create({ data: { email, password: hashedPassword } });
-  } catch (error) {
-    throw new Error("Failed registration. Please try again");
-  }
 
-  redirect("/login");
-};
+    redirect("/login");
+  },
+);
 
 export const loginCreds = async ({ email, password }: CredsProps) => {
   try {
     await credentialsSchema.parseAsync({ email, password });
   } catch (error) {
-    if (error instanceof ZodError) {
-      return null;
-    }
+    throw new Error("Validation failed.");
   }
 
   const existingUser = await getUserByEmail(email);
-  if (!existingUser)
+  if (!existingUser) {
     throw new Error(
       "Email not found. Please check your email address or sign up for a new account.",
     );
+  }
 
-  const checkPassword = compareSync(password, existingUser?.password ?? "");
+  const checkPassword = await compare(password, existingUser?.password ?? "");
   if (!checkPassword) throw new Error("Incorrect password. Please try again.");
 
   await signIn("credentials", { email, password, redirectTo: "/account" });

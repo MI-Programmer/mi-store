@@ -9,6 +9,7 @@ import { productSchema } from "@/lib/zod";
 import { getUser } from "@/actions/user";
 import { PAGE_SIZE } from "@/utils/constants";
 import { createSbImagePath, getImageNameSb } from "@/utils/helper";
+import { catchAsync } from "@/utils/catchAsync";
 
 interface InputsProps {
   colors: string[] | [];
@@ -46,122 +47,107 @@ export const getAllProducts = async (page: number, filter: string) => {
   return products;
 };
 
-export const createProduct = async (
-  inputs: InputsProps,
-  formData: FormData,
-) => {
-  const user = await getUser(["id", "role"]);
-  if (user?.role !== "ADMIN")
-    throw new Error("User does not have admin privileges");
+export const createProduct = catchAsync(
+  async (inputs: InputsProps, formData: FormData) => {
+    const user = await getUser(["id", "role"]);
+    if (user?.role !== "ADMIN")
+      throw new Error("User does not have admin privileges");
 
-  const data = Object.fromEntries(formData.entries());
-  const imageFile = data.image as File;
-  const productData: any = { ...data, ...inputs };
-  productData.price = +productData.price;
+    const data = Object.fromEntries(formData.entries());
+    const imageFile = data.image as File;
+    const productData: any = { ...data, ...inputs };
+    productData.price = +productData.price;
 
-  try {
-    await productSchema.parseAsync(productData);
-  } catch (error) {
-    if (error instanceof ZodError) {
-      console.error("Validation Error:", error.errors);
-      return null;
+    try {
+      await productSchema.parseAsync(productData);
+    } catch (error) {
+      throw new Error("Validation failed");
     }
-  }
 
-  const { imageName, imageUrl } = createSbImagePath(imageFile.name, "product");
-  productData.image = imageUrl;
+    const { imageName, imageUrl } = createSbImagePath(
+      imageFile.name,
+      "product",
+    );
+    productData.image = imageUrl;
 
-  try {
     await prisma.product.create({ data: { ...productData } });
-  } catch (error: any) {
-    // console.log(error.message);
-    throw new Error("Failed to create new product item. Please try again");
-  }
 
-  const { error } = await supabase.storage
-    .from("product-images")
-    .upload(imageName, imageFile);
-  if (error) throw new Error("Failed to upload image. Please try again.");
+    const { error } = await supabase.storage
+      .from("product-images")
+      .upload(imageName, imageFile);
+    if (error) throw new Error("Failed to upload image. Please try again.");
 
-  revalidatePath("/admin/products");
-  redirect("/admin/products");
-};
+    revalidatePath("/admin/products");
+    redirect("/admin/products");
+  },
+);
 
-export const updateProduct = async (
-  inputs: InputsProps,
-  productId: string,
-  formData: FormData,
-) => {
-  const user = await getUser(["role"]);
-  if (user?.role !== "ADMIN")
-    throw new Error("User does not have admin privileges");
+export const updateProduct = catchAsync(
+  async (inputs: InputsProps, productId: string, formData: FormData) => {
+    const user = await getUser(["role"]);
+    if (user?.role !== "ADMIN")
+      throw new Error("User does not have admin privileges");
 
-  const data = Object.fromEntries(formData.entries());
-  const newProduct: any = { ...data, ...inputs };
-  newProduct.price = +newProduct.price;
-  const imageFile = data.image as File;
-  const { imageName, imageUrl } = createSbImagePath(imageFile.name, "product");
-  if (!imageFile.size) delete newProduct.image;
+    const data = Object.fromEntries(formData.entries());
+    const newProduct: any = { ...data, ...inputs };
+    newProduct.price = +newProduct.price;
+    const imageFile = data.image as File;
+    const { imageName, imageUrl } = createSbImagePath(
+      imageFile.name,
+      "product",
+    );
+    if (!imageFile.size) delete newProduct.image;
 
-  try {
-    await productSchema.parseAsync(newProduct);
-  } catch (error) {
-    if (error instanceof ZodError) {
-      console.error("Validation Error:", error.errors);
-      return null;
+    try {
+      await productSchema.parseAsync(newProduct);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        throw new Error("Validation Failed");
+      }
     }
-  }
 
-  if (imageFile.size > 0) newProduct.image = imageUrl;
-  const { image: oldImage }: any =
-    (await getProductById(productId, ["image"])) ?? {};
+    if (imageFile.size > 0) newProduct.image = imageUrl;
+    const { image: oldImage }: any =
+      (await getProductById(productId, ["image"])) ?? {};
 
-  try {
     await prisma.product.update({
       where: { id: productId },
       data: { ...newProduct },
     });
-  } catch (error: any) {
-    // console.log(error.message);
-    throw new Error("Failed to update product item. Please try again");
-  }
 
-  if (imageFile.size > 0) {
-    let supabaseStorage = supabase.storage.from("product-images");
-    const { error } = await supabaseStorage.upload(imageName, imageFile);
-    if (error)
-      throw new Error("Failed to update product image. Please try again.");
+    if (imageFile.size > 0) {
+      let supabaseStorage = supabase.storage.from("product-images");
+      const { error } = await supabaseStorage.upload(imageName, imageFile);
+      if (error)
+        throw new Error("Failed to update product image. Please try again.");
 
-    if (oldImage) {
-      const deleteOldImage = getImageNameSb(oldImage);
+      if (oldImage) {
+        const deleteOldImage = getImageNameSb(oldImage);
 
-      const { error: errorDelete } = await supabaseStorage.remove([
-        deleteOldImage,
-      ]);
-      if (error) throw new Error(errorDelete?.message);
+        const { error: errorDelete } = await supabaseStorage.remove([
+          deleteOldImage,
+        ]);
+        if (error) throw new Error(errorDelete?.message);
+      }
     }
-  }
 
-  revalidatePath("/admin/products");
-  redirect("/admin/products");
-};
+    revalidatePath("/admin/products");
+    redirect("/admin/products");
+  },
+);
 
-export const deleteProduct = async (deletedProductId: string) => {
+export const deleteProduct = catchAsync(async (deletedProductId: string) => {
   const user = await getUser(["productIds", "role"]);
   if (user?.role !== "ADMIN")
     throw new Error("User does not have admin privileges");
 
   let deleteImage;
 
-  try {
-    const product = await prisma.product.delete({
-      where: { id: deletedProductId },
-    });
+  const product = await prisma.product.delete({
+    where: { id: deletedProductId },
+  });
 
-    deleteImage = product.image;
-  } catch (error: any) {
-    throw new Error(error.message);
-  }
+  deleteImage = product.image;
 
   if (deleteImage) {
     const deleteOldImage = getImageNameSb(deleteImage);
@@ -173,4 +159,4 @@ export const deleteProduct = async (deletedProductId: string) => {
   }
 
   revalidatePath("/admin/products");
-};
+});
