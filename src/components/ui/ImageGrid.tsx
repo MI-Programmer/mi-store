@@ -1,12 +1,12 @@
 import Image from "next/image";
 
-import image1 from "@/public/imagesGrid/01.jpg";
-import image2 from "@/public/imagesGrid/02.jpg";
-import image3 from "@/public/imagesGrid/03.jpg";
-import image4 from "@/public/imagesGrid/04.jpg";
-import image5 from "@/public/imagesGrid/05.jpg";
-import image6 from "@/public/imagesGrid/06.jpg";
-import image7 from "@/public/imagesGrid/07.jpg";
+import image1 from "/public/imagesGrid/01.jpg";
+import image2 from "/public/imagesGrid/02.jpg";
+import image3 from "/public/imagesGrid/03.jpg";
+import image4 from "/public/imagesGrid/04.jpg";
+import image5 from "/public/imagesGrid/05.jpg";
+import image6 from "/public/imagesGrid/06.jpg";
+import image7 from "/public/imagesGrid/07.jpg";
 
 const style = {
   gridCol: "grid flex-shrink-0 grid-cols-1 gap-y-6 lg:gap-y-8",

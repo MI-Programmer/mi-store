@@ -6,9 +6,9 @@ import OrderSummaryInfo, {
   statusColors,
 } from "@/components/order/OrderSummaryInfo";
 import OrderSummaryTotal from "@/components/order/OrderSummaryTotal";
+import BackButton from "@/components/ui/BackButton";
 import Empty from "@/components/ui/Empty";
 import { getOrder } from "@/actions/order";
-import BackButton from "@/components/ui/BackButton";
 
 export const metadata: Metadata = { title: "Order summary" };
 

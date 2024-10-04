@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { PencilIcon } from "@heroicons/react/24/outline";
 
-import defaultUserImg from "@/public/default-user.jpg";
+import defaultUserImg from "/public/default-user.jpg";
 import { User } from "@/app/admin/users/page";
 import FormRow from "@/components/ui/FormRow";
 import Button from "@/components/ui/Button";

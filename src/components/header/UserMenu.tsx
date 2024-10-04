@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
 
-import defaultUserImg from "@/public/default-user.jpg";
 import CartLink from "@/components/cart/CartLink";
 import Button from "@/components/ui/Button";
 import ButtonAction from "@/components/ui/ButtonAction";
@@ -12,7 +11,7 @@ import { getUser } from "@/actions/user";
 const UserMenu = async () => {
   const session = await auth();
   const user = await getUser(["name", "image"]);
-  const userImage = user?.image ?? defaultUserImg;
+  const userImage = user?.image ?? "/default-user.jpg";
 
   return (
     <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">

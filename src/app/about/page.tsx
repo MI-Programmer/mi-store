@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 import Image from "next/image";
 
-import image1 from "@/public/imagesAbout/01.jpg";
-import image2 from "@/public/imagesAbout/02.jpg";
+import image1 from "/public/imagesAbout/01.jpg";
+import image2 from "/public/imagesAbout/02.jpg";
 
 export const metadata: Metadata = { title: "About" };
 

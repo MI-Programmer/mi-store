@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 
-import defaultProfileImage from "@/public/default-user.jpg";
+import defaultProfileImage from "/public/default-user.jpg";
 import UpdateImageForm from "@/components/account/UpdateImageForm";
 import AccountSettingsForm from "@/components/account/AccountSettingsForm";
 import { getUser } from "@/actions/user";

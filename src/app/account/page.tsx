@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Metadata } from "next";
 
-import defaultProfileImage from "@/public/default-user.jpg";
+import defaultProfileImage from "/public/default-user.jpg";
 import { getUser } from "@/actions/user";
 
 export const metadata: Metadata = { title: "Account" };

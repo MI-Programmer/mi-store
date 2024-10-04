@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import defaultUserImg from "@/public/default-user.jpg";
+import defaultUserImg from "/public/default-user.jpg";
 import UpdateRoleForm from "@/components/account/UpdateRoleForm";
 import Badge from "@/components/ui/Badge";
 import { User } from "@/app/admin/users/page";

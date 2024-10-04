@@ -51,8 +51,9 @@ export const getOrdersUserLength = async (filter: string) => {
 };
 
 export const getOrder = async (id: string) => {
-  const user = await getUser(["id"]);
-  if (!user?.id) throw new Error("User not authenticated");
+  const user = await getUser(["id", "role"]);
+  if (!user?.id && user?.role !== "ADMIN")
+    throw new Error("User not authenticated");
 
   try {
     const order = await prisma.order.findUnique({

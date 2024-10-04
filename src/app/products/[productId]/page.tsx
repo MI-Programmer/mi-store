@@ -19,7 +19,6 @@ export const generateMetadata = async ({ params }: ParamsProps) => {
 
 const Product = async ({ params: { productId } }: ParamsProps) => {
   const product = await getProductById(productId);
-
   const { name, image, price, category, description } = product ?? {};
 
   if (!product) return <Empty>product</Empty>;
@@ -28,10 +27,8 @@ const Product = async ({ params: { productId } }: ParamsProps) => {
     <div className="max-w-6xl space-y-6">
       <div className="flex items-center justify-between px-4 sm:px-6 lg:px-8">
         <Breadcrumb name={name as string} category={category as string} />
-
         <BackButton />
       </div>
-
       <div className="mx-auto flex flex-col gap-8 rounded-lg bg-gray-100 p-8 shadow-md md:flex-row">
         <div className="relative h-96 w-full overflow-hidden rounded-lg shadow-lg sm:h-[500px] md:w-1/2">
           <Image
@@ -41,18 +38,15 @@ const Product = async ({ params: { productId } }: ParamsProps) => {
             className="object-cover"
           />
         </div>
-
         <div className="flex w-full flex-col justify-between md:w-1/2">
           <div>
             <h2 className="text-3xl font-bold text-gray-800">
               <span className="font-semibold text-gray-700">Name :</span> {name}
             </h2>
-
             <p className="mt-2 text-xl text-gray-600">
               <span className="font-semibold text-gray-700">Price : </span>
               {formatCurrency(price as number)}
             </p>
-
             <p className="text-md mt-1 capitalize text-gray-500">
               <span className="font-semibold text-gray-700">Category :</span>{" "}
               {category}
