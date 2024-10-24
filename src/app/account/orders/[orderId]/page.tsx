@@ -27,7 +27,7 @@ const OrderSummary = async ({ params }: { params: Params }) => {
         shippingAddress={user?.shippingAddress ?? ""}
       />
 
-      {items?.map((item) => <OrderItem key={item.id} item={item} />)}
+      {items?.map((item: any) => <OrderItem key={item.id} item={item} />)}
 
       <OrderSummaryTotal
         totalPrice={totalPrice as number}
