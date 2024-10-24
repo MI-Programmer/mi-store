@@ -36,25 +36,28 @@ export const registerCreds = catchAsync(
   },
 );
 
-export const loginCreds = async ({ email, password }: CredsProps) => {
-  try {
-    await credentialsSchema.parseAsync({ email, password });
-  } catch (error) {
-    throw new Error("Validation failed.");
-  }
+export const loginCreds = catchAsync(
+  async ({ email, password }: CredsProps) => {
+    try {
+      await credentialsSchema.parseAsync({ email, password });
+    } catch (error) {
+      throw new Error("Validation failed.");
+    }
 
-  const existingUser = await getUserByEmail(email);
-  if (!existingUser) {
-    throw new Error(
-      "Email not found. Please check your email address or sign up for a new account.",
-    );
-  }
+    const existingUser = await getUserByEmail(email);
+    if (!existingUser) {
+      throw new Error(
+        "Email not found. Please check your email address or sign up for a new account.",
+      );
+    }
 
-  const checkPassword = await compare(password, existingUser?.password ?? "");
-  if (!checkPassword) throw new Error("Incorrect password. Please try again.");
+    const checkPassword = await compare(password, existingUser?.password ?? "");
+    if (!checkPassword)
+      throw new Error("Incorrect password. Please try again.");
 
-  await signIn("credentials", { email, password, redirectTo: "/account" });
-};
+    await signIn("credentials", { email, password, redirectTo: "/account" });
+  },
+);
 
 export const loginProvider = async ({ provider }: { provider: string }) => {
   await signIn(provider, { redirectTo: "/" });
