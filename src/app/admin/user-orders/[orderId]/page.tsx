@@ -9,6 +9,7 @@ import OrderSummaryTotal from "@/components/order/OrderSummaryTotal";
 import BackButton from "@/components/ui/BackButton";
 import Empty from "@/components/ui/Empty";
 import { getOrder } from "@/actions/order";
+import { OrderItem as Item } from "@/types/order";
 
 export const metadata: Metadata = { title: "Order summary" };
 
@@ -34,7 +35,7 @@ const OrderSummary = async ({ params }: { params: Params }) => {
         phone={user?.phone}
       />
 
-      {items?.map((item) => <OrderItem key={item.id} item={item} />)}
+      {items?.map((item: Item) => <OrderItem key={item.id} item={item} />)}
 
       <OrderSummaryTotal
         totalPrice={totalPrice as number}

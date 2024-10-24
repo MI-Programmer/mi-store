@@ -1,14 +1,10 @@
 import Image from "next/image";
 
 import { formatCurrency } from "@/utils/helper";
+import { OrderItem as Item } from "@/types/order";
 
 interface OrderItemProps {
-  item: {
-    product: { image: string; name: string; price: number };
-    quantity: number;
-    selectedSize: string;
-    selectedColor: string;
-  };
+  item: Item;
 }
 
 const OrderItem = ({ item }: OrderItemProps) => {

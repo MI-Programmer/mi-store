@@ -8,6 +8,7 @@ import OrderSummaryInfo, {
 import OrderSummaryTotal from "@/components/order/OrderSummaryTotal";
 import Empty from "@/components/ui/Empty";
 import { getOrder } from "@/actions/order";
+import { OrderItem as Item } from "@/types/order";
 
 export const metadata: Metadata = { title: "Order summary" };
 
@@ -27,7 +28,7 @@ const OrderSummary = async ({ params }: { params: Params }) => {
         shippingAddress={user?.shippingAddress ?? ""}
       />
 
-      {items?.map((item: any) => <OrderItem key={item.id} item={item} />)}
+      {items?.map((item: Item) => <OrderItem key={item.id} item={item} />)}
 
       <OrderSummaryTotal
         totalPrice={totalPrice as number}
